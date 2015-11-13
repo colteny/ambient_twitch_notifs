@@ -1,5 +1,8 @@
+package ambient_twitch_notifs;
+
 import java.util.Scanner;
 import java.util.InputMismatchException;
+
 
 /**
  *@author Team Danbo
