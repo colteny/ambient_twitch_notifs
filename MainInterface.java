@@ -32,9 +32,19 @@ public class MainInterface {
 		channels.add("Trick2g");
 
 		
-		//create and initialize frames
+		//create and initialize frames and menus
+		//Frame
 		JFrame frame = new JFrame("Twitch Ambient Interface");
 		frame.setLayout(new GridLayout(0, 3));
+		//Menus
+		JMenuBar menubar = new JMenuBar();
+		JMenu menu = new JMenu("Settings");
+		menu.setMnemonic(KeyEvent.VK_A);
+		menu.getAccessibleContext().setAccessibleDescription(
+		        "test");
+		menubar.add(menu);
+		//Adding menu to frame.
+		frame.add(menubar,BorderLayout.PAGE_START);
 		
 	  // Add a window listner for close button
 		frame.addWindowListener(new WindowAdapter() {
@@ -63,7 +73,7 @@ public class MainInterface {
       		}
       		else if(os.indexOf( "mac" ) >= 0) {
       			try {
-							rt.exec( "open" + url);
+							rt.exec( "open " + url);
 						} catch (IOException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
