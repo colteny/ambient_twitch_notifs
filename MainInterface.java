@@ -38,10 +38,12 @@ public class MainInterface {
 		frame.setLayout(new GridLayout(0, 3));
 		//Menus
 		JMenuBar menubar = new JMenuBar();
-		JMenu menu = new JMenu("Settings");
+		JMenu menu = new JMenu("menubar");
+		JMenuItem settings = new JMenuItem("Settings");
 		menu.setMnemonic(KeyEvent.VK_A);
 		menu.getAccessibleContext().setAccessibleDescription(
 		        "test");
+		menu.add(settings);
 		menubar.add(menu);
 		//Adding menu to frame.
 		frame.add(menubar,BorderLayout.PAGE_START);
