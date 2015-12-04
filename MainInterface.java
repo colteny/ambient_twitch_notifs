@@ -99,7 +99,7 @@ public class MainInterface {
 		//Populate Grid by creating buttons
 		for(int i=0; i<channels.size(); i++) {
 			final String channelName = channels.get(i);
-			JButton b1 = new JButton();
+			JButton b1 = new JButton(channelName);
 			//testing to see if color change and sound works.
 			//alreadyOnline.add(0);
 			b1.addActionListener(new ActionListener()
