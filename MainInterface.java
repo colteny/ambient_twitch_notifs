@@ -15,6 +15,8 @@ import javax.sound.sampled.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.NumberFormat;
+import javax.swing.text.NumberFormatter;
 /*
  * Credit for checkOnline & readFromURL method code: https://stackoverflow.com/questions/21926374/checking-if-a-twitch-tv-stream-is-online-and-receive-viewer-counts-using-pircbot
  */
@@ -25,6 +27,7 @@ public class MainInterface {
 	private static ArrayList<JButton> buttons = new ArrayList<JButton>();
 	private static ArrayList<Integer> alreadyOnline = new ArrayList<Integer>();
 	private static Runtime rt = Runtime.getRuntime();
+	private static int updateTime = 10;
 	
 
 	
@@ -38,7 +41,6 @@ public class MainInterface {
 		
 	  Color startColor = new Color(75,225,225);
 	  Color endColor = new Color(225,75,75);
-	  int updateTime = 10;
 
 		
 		//create and initialize frames and menus
@@ -53,15 +55,22 @@ public class MainInterface {
 					JPanel list = new JPanel();
 					
 					list.setLayout(new BoxLayout(list, BoxLayout.Y_AXIS));
-          
-          JLabel ref = new JLabel("Refresh Time Cycle: " + updateTime + " sec");	//updateTime local variable, asking for 'final'
-          JTextField refreshTime = new JTextField(2);
+
+					NumberFormat intFormat = NumberFormat.getIntegerInstance();
+					NumberFormatter numberFormatter = new NumberFormatter(intFormat);
+					numberFormatter.setValueClass(Integer.class); //ensures integer value
+					numberFormatter.setAllowsInvalid(false); //never allows anything else
+					numberFormatter.setMinimum(0); //lowest value
+					numberFormatter.setMaximum(Integer.MAX_VALUE); //max value of an integer, change it if you like
+
+          JLabel ref = new JLabel("Refresh Time Cycle:  (in seconds)");	//updateTime local variable, asking for 'final'
+          JTextField refreshTime = new JFormattedTextField(numberFormatter);;
           JButton changeTime = new JButton("Accept");
           changeTime.addActionListener(new ActionListener()
           		{
         	  		public void actionPerformed(ActionEvent e) {
-        	  			updateTime = Integer.parseInt(refreshTime.getText());	//updateTime local variable, asking for 'final'
-        	  		}
+						updateTime = Integer.parseInt(refreshTime.getText()) * 1000;
+					}
         		});
 					list.add(ref);
 					list.add(refreshTime);
