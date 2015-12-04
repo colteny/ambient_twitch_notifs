@@ -1,6 +1,8 @@
 package ambient_twitch_notifs;
 
 import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -81,6 +83,20 @@ public class MainInterface {
 					JLabel sn = new JLabel("Add new Streamer");
           JTextField streamer = new JTextField(15);
           JButton addStream = new JButton("Add");
+          addStream.addActionListener(new ActionListener()
+        	 {
+        	  	  public void actionPerformed(ActionEvent e) {
+        	  	  	try {
+        				if(getResponseCode("http://www.twitch.tv/" + streamer.getText()) != 404) {
+        	  	  			channels.add(streamer.getText());
+        	  	  		}
+        	  	  	} catch (IOException ioe) {
+        	  	  		ioe.printStackTrace();
+        	  	  	}
+        	  	      		
+        	  	  }
+        	}
+          );
           list.add(sn);
 					list.add(streamer);
 					list.add(addStream);
@@ -258,5 +274,13 @@ public static void playAudio() throws IOException {
 	}	
 }
 
+public static int getResponseCode(String urlString) throws MalformedURLException, IOException {
+    URL u = new URL(urlString); 
+    HttpURLConnection huc =  (HttpURLConnection)  u.openConnection(); 
+    huc.setRequestMethod("GET"); 
+    huc.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 (.NET CLR 3.5.30729)");
+    huc.connect(); 
+    return huc.getResponseCode();
+}
 
 }
