@@ -69,7 +69,8 @@ public class MainInterface {
           changeTime.addActionListener(new ActionListener()
           		{
         	  		public void actionPerformed(ActionEvent e) {
-						updateTime = Integer.parseInt(refreshTime.getText()) * 1000;
+						updateTime = Integer.parseInt(refreshTime.getText());
+						System.out.println(updateTime);
 					}
         		});
 					list.add(ref);
