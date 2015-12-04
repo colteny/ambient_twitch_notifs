@@ -1,13 +1,16 @@
 package ambient_twitch_notifs;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
 
+import sun.audio.*;
+
 import javax.swing.*;
+import javax.sound.sampled.*;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -65,6 +68,14 @@ public class MainInterface {
       	{
       		String url = "http://www.twitch.tv/" + channelName;
       		String os = System.getProperty("os.name").toLowerCase();
+      		
+      		try {
+						playAudio("C:/Users/Garry/workspace/ics414proj/src/ambient_twitch_notifs/sound1.wav");
+					} catch (IOException e2) {
+						// TODO Auto-generated catch block
+						e2.printStackTrace();
+					}
+      		
       		if (os.indexOf( "win" ) >= 0) {
       		  try {
 							rt.exec( "rundll32 url.dll,FileProtocolHandler " + url);
@@ -147,6 +158,26 @@ private static String readFromUrl(String url) throws IOException {
           scanner.close();
   }
   return sb.toString();
+}
+public static void playAudio(String filePath) throws IOException {
+	String fp = filePath;
+	File soundFile = new File(fp);
+	try {
+		AudioInputStream audioIn = AudioSystem.getAudioInputStream(soundFile);
+		Clip clip = AudioSystem.getClip();
+		
+		clip.open(audioIn);
+		clip.start();
+	} 
+	catch (UnsupportedAudioFileException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (LineUnavailableException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	
+	
 }
 
 }
