@@ -38,6 +38,7 @@ public class MainInterface {
 		
 	  Color startColor = new Color(75,225,225);
 	  Color endColor = new Color(225,75,75);
+	  int updateTime = 10;
 
 		
 		//create and initialize frames and menus
@@ -53,10 +54,18 @@ public class MainInterface {
 					
 					list.setLayout(new BoxLayout(list, BoxLayout.Y_AXIS));
           
-          JLabel ref = new JLabel("Refresh Time Cycle");
+          JLabel ref = new JLabel("Refresh Time Cycle: " + updateTime + " sec");	//updateTime local variable, asking for 'final'
           JTextField refreshTime = new JTextField(2);
+          JButton changeTime = new JButton("Accept");
+          changeTime.addActionListener(new ActionListener()
+          		{
+        	  		public void actionPerformed(ActionEvent e) {
+        	  			updateTime = Integer.parseInt(refreshTime.getText());	//updateTime local variable, asking for 'final'
+        	  		}
+        		});
 					list.add(ref);
 					list.add(refreshTime);
+					list.add(changeTime);
 					list.add(Box.createRigidArea(new Dimension(0,7)));
 					
 					JLabel sn = new JLabel("Add new Streamer");
@@ -74,20 +83,6 @@ public class MainInterface {
 		);
 		menu.setPreferredSize(new Dimension(85, 85));
     buttons.add(menu);
-
-		/**
-		//Menus
-		JMenuBar menubar = new JMenuBar();
-		JMenu menu = new JMenu("menubar");
-		JMenuItem settings = new JMenuItem("Settings");
-		menu.setMnemonic(KeyEvent.VK_A);
-		menu.getAccessibleContext().setAccessibleDescription(
-		        "test");
-		menu.add(settings);
-		menubar.add(menu);
-		//Adding menu to frame.
-		frame.add(menubar,BorderLayout.PAGE_START);
-		**/
 		
 	  // Add a window listener for close button
 		frame.addWindowListener(new WindowAdapter() {
@@ -198,7 +193,7 @@ public class MainInterface {
 			}
 			//Delay before next refresh
 		  try {
-		    Thread.sleep(10000);                 //1000 milliseconds is one second.
+		    Thread.sleep(updateTime * 1000);                 //1000 milliseconds is one second.
 		  } 
 		  catch(InterruptedException ex) {
 		    Thread.currentThread().interrupt();
