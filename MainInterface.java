@@ -16,7 +16,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /*
- * Credit for code: https://stackoverflow.com/questions/21926374/checking-if-a-twitch-tv-stream-is-online-and-receive-viewer-counts-using-pircbot
+ * Credit for checkOnline & readFromURL method code: https://stackoverflow.com/questions/21926374/checking-if-a-twitch-tv-stream-is-online-and-receive-viewer-counts-using-pircbot
  */
 
 public class MainInterface {
@@ -44,6 +44,38 @@ public class MainInterface {
 		//Frame
 		JFrame frame = new JFrame("Twitch Ambient Interface");
 		frame.setLayout(new GridLayout(0, 3));
+		JButton menu = new JButton("Settings");
+		menu.addActionListener(new ActionListener()
+			{				
+				public void actionPerformed(ActionEvent e) {
+					JFrame frame = new JFrame("Settings");
+					JPanel list = new JPanel();
+					
+					list.setLayout(new BoxLayout(list, BoxLayout.Y_AXIS));
+          
+          JLabel ref = new JLabel("Refresh Time Cycle");
+          JTextField refreshTime = new JTextField(2);
+					list.add(ref);
+					list.add(refreshTime);
+					list.add(Box.createRigidArea(new Dimension(0,7)));
+					
+					JLabel sn = new JLabel("Add new Streamer");
+          JTextField streamer = new JTextField(15);
+          JButton addStream = new JButton("Add");
+          list.add(sn);
+					list.add(streamer);
+					list.add(addStream);
+					
+					frame.add(list);
+					frame.pack();
+					frame.setVisible(true);
+				}			
+			}
+		);
+		menu.setPreferredSize(new Dimension(85, 85));
+    buttons.add(menu);
+
+		/**
 		//Menus
 		JMenuBar menubar = new JMenuBar();
 		JMenu menu = new JMenu("menubar");
@@ -55,6 +87,7 @@ public class MainInterface {
 		menubar.add(menu);
 		//Adding menu to frame.
 		frame.add(menubar,BorderLayout.PAGE_START);
+		**/
 		
 	  // Add a window listener for close button
 		frame.addWindowListener(new WindowAdapter() {
@@ -96,11 +129,11 @@ public class MainInterface {
       });
 			b1.setToolTipText(channels.get(i));
 			if(checkIfOnline(channels.get(i))) {
-				//alreadyOnline.add(1);
+				alreadyOnline.add(1);
 				b1.setBackground(startColor);
 			}
 			else {
-				//alreadyOnline.add(0);
+				alreadyOnline.add(0);
 				b1.setBackground(endColor);
 			}
       b1.setPreferredSize(new Dimension(85, 85));
