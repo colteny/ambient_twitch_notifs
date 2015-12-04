@@ -14,10 +14,12 @@ import sun.audio.*;
 import javax.swing.*;
 import javax.sound.sampled.*;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.NumberFormat;
+
 import javax.swing.text.NumberFormatter;
 /*
  * Credit for checkOnline & readFromURL method code: https://stackoverflow.com/questions/21926374/checking-if-a-twitch-tv-stream-is-online-and-receive-viewer-counts-using-pircbot
@@ -36,13 +38,13 @@ public class MainInterface {
 	public static void main(String[] argv) throws IOException, JSONException {
 		
 		//Initialize channels
-		channels.add("Jankos");
-		channels.add("C9Sneaky");
-		channels.add("flosd");
-		channels.add("Trick2g");
+		
 		
 	  Color startColor = new Color(75,225,225);
 	  Color endColor = new Color(225,75,75);
+	  
+	  //input username as a param to build list of people you are following
+	  channels =getFollows("tehfl4n");
 
 		
 		//create and initialize frames and menus
@@ -66,7 +68,7 @@ public class MainInterface {
 					numberFormatter.setMaximum(Integer.MAX_VALUE); //max value of an integer, change it if you like
 
           JLabel ref = new JLabel("Refresh Time Cycle:  (in seconds)");	//updateTime local variable, asking for 'final'
-          JTextField refreshTime = new JFormattedTextField(numberFormatter);;
+          final JTextField refreshTime = new JFormattedTextField(numberFormatter);;
           JButton changeTime = new JButton("Accept");
           changeTime.addActionListener(new ActionListener()
           		{
@@ -81,7 +83,7 @@ public class MainInterface {
 					list.add(Box.createRigidArea(new Dimension(0,7)));
 					
 					JLabel sn = new JLabel("Add new Streamer");
-          JTextField streamer = new JTextField(15);
+          final JTextField streamer = new JTextField(15);
           JButton addStream = new JButton("Add");
           addStream.addActionListener(new ActionListener()
         	 {
@@ -236,6 +238,33 @@ public static boolean checkIfOnline(String channel) throws IOException, JSONExce
     JSONObject json = new JSONObject(jsonText);
 
     return !json.isNull("stream");
+}
+
+public static ArrayList<String> getFollows(String user) throws IOException, JSONException {
+	String userUrl = "https://api.twitch.tv/kraken/users/" + user + "/follows/channels";
+	
+	ArrayList<String> streamers = new ArrayList<String>();
+
+	//parses JSONArray to get the name of the streamer
+  String jsonText = readFromUrl(userUrl);// reads text from URL
+  JSONObject json = new JSONObject(jsonText);
+  //total number of people following
+  int total = (int) json.get("_total");
+  
+//parses JSONArray to get the name of the streamer then adds them to an array
+  for(int i = total-1; i >= 0;i--) {
+
+  	JSONArray arr1 = (JSONArray) json.getJSONArray("follows");
+    JSONObject obj1 = (JSONObject) arr1.get(i);
+    JSONObject obj2 = (JSONObject) obj1.getJSONObject("channel");
+    String obj3 = (String) obj2.get("name");
+    
+
+    streamers.add(obj3);
+  }
+  
+
+  return streamers;
 }
 
 //method to help read URL into JSON object
