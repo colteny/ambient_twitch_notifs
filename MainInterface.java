@@ -23,7 +23,9 @@ public class MainInterface {
 	
 	private static ArrayList<String> channels = new ArrayList<String>();
 	private static ArrayList<JButton> buttons = new ArrayList<JButton>();
+	private static ArrayList<Integer> alreadyOnline = new ArrayList<Integer>();
 	private static Runtime rt = Runtime.getRuntime();
+	
 
 	
 	public static void main(String[] argv) throws IOException, JSONException {
@@ -33,6 +35,9 @@ public class MainInterface {
 		channels.add("C9Sneaky");
 		channels.add("flosd");
 		channels.add("Trick2g");
+		
+	  Color startColor = new Color(75,225,225);
+	  Color endColor = new Color(225,75,75);
 
 		
 		//create and initialize frames and menus
@@ -51,7 +56,7 @@ public class MainInterface {
 		//Adding menu to frame.
 		frame.add(menubar,BorderLayout.PAGE_START);
 		
-	  // Add a window listner for close button
+	  // Add a window listener for close button
 		frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				System.exit(0);
@@ -62,19 +67,14 @@ public class MainInterface {
 		for(int i=0; i<channels.size(); i++) {
 			final String channelName = channels.get(i);
 			JButton b1 = new JButton();
+			//testing to see if color change and sound works.
+			//alreadyOnline.add(0);
 			b1.addActionListener(new ActionListener()
       {
       	public void actionPerformed(ActionEvent e)
       	{
       		String url = "http://www.twitch.tv/" + channelName;
       		String os = System.getProperty("os.name").toLowerCase();
-      		
-      		try {
-						playAudio("C:/Users/Garry/workspace/ics414proj/src/ambient_twitch_notifs/sound1.wav");
-					} catch (IOException e2) {
-						// TODO Auto-generated catch block
-						e2.printStackTrace();
-					}
       		
       		if (os.indexOf( "win" ) >= 0) {
       		  try {
@@ -96,10 +96,12 @@ public class MainInterface {
       });
 			b1.setToolTipText(channels.get(i));
 			if(checkIfOnline(channels.get(i))) {
-				b1.setBackground(Color.GREEN);
+				//alreadyOnline.add(1);
+				b1.setBackground(startColor);
 			}
 			else {
-				b1.setBackground(Color.RED);
+				//alreadyOnline.add(0);
+				b1.setBackground(endColor);
 			}
       b1.setPreferredSize(new Dimension(85, 85));
       buttons.add(b1);
@@ -116,15 +118,54 @@ public class MainInterface {
 		while(true) {
 			for(int i=0; i<channels.size(); i++) {
 				if(checkIfOnline(channels.get(i))) {
-					buttons.get(i).setBackground(Color.GREEN);
+					//checks if the person is already set to Online
+					if(alreadyOnline.get(i)!=1) {
+					//Plays sound when someone comes online
+						alreadyOnline.set(i, 1);
+						try {
+							playAudio();
+						} catch (IOException e2) {
+							// TODO Auto-generated catch block
+							e2.printStackTrace();
+						}
+						//for loop changes slowly changes the color of button when the streamer becomes online
+						for(int q = 0; q < 150; q++) {
+							endColor = new Color (endColor.getRed()- 1, endColor.getGreen() +1, endColor.getBlue() +1);
+							buttons.get(i).setBackground(endColor);
+							try {
+								Thread.sleep(7);
+							} catch (InterruptedException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+						}
+					  startColor = new Color(75,225,225);
+					  endColor = new Color(225,75,75);
+					}
 				}
 				else {
-					buttons.get(i).setBackground(Color.RED);
+					if(alreadyOnline.get(i) != 0) {
+						//checks if the person is already set to Offline
+						alreadyOnline.set(i, 0);
+						//for loop changes slowly changes the color of button when the streamer becomes offline
+						for(int q = 0; q < 150; q++) {
+							startColor = new Color (startColor.getRed()+ 1, startColor.getGreen() -1, startColor.getBlue() -1);
+							buttons.get(i).setBackground(startColor);
+							try {
+								Thread.sleep(7);
+							} 	catch (InterruptedException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+						}
+					  startColor = new Color(75,225,225);
+					  endColor = new Color(225,75,75);
+					}
 				}
 			}
 			//Delay before next refresh
 		  try {
-		    Thread.sleep(30000);                 //1000 milliseconds is one second.
+		    Thread.sleep(10000);                 //1000 milliseconds is one second.
 		  } 
 		  catch(InterruptedException ex) {
 		    Thread.currentThread().interrupt();
@@ -159,9 +200,10 @@ private static String readFromUrl(String url) throws IOException {
   }
   return sb.toString();
 }
-public static void playAudio(String filePath) throws IOException {
-	String fp = filePath;
-	File soundFile = new File(fp);
+
+public static void playAudio() throws IOException {
+	URL path = MainInterface.class.getResource("sound1.wav");
+	File soundFile = new File(path.getFile());
 	try {
 		AudioInputStream audioIn = AudioSystem.getAudioInputStream(soundFile);
 		Clip clip = AudioSystem.getClip();
@@ -175,9 +217,8 @@ public static void playAudio(String filePath) throws IOException {
 	} catch (LineUnavailableException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
-	}
-	
-	
+	}	
 }
+
 
 }
