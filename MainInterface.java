@@ -88,20 +88,6 @@ public class MainInterface {
 		
 	  Color startColor = new Color(75,225,225);
 	  Color endColor = new Color(225,75,75);
-	  
-	  //input username as a param to build list of people you are following
-<<<<<<< HEAD
-	  //channels =getFollows("syndicate");
-=======
-	  //channels =getFollows("tehfl4n");
-
-		
-		/**
-		 channels.add("Jankos");
-		 channels.add("C9Sneaky");
-		 channels.add("flosd");
-		 channels.add("Trick2g");**/
->>>>>>> origin/master
 
 		//create and initialize frames and menus
 		//Frame
@@ -357,12 +343,8 @@ public static ArrayList<String> getFollows(String user) throws IOException, JSON
 	}
 
 	public static void playAudio() throws IOException {
-<<<<<<< HEAD
-		URL path = MainInterface.class.getResource("sound1.wav");
-		File soundFile = new File(path.getFile());
-=======
+		
 		File soundFile = new File(currentDirectory + "\\src\\ambient_twitch_notifs\\sound1.wav");
->>>>>>> origin/master
 		try {
 			AudioInputStream audioIn = AudioSystem.getAudioInputStream(soundFile);
 			Clip clip = AudioSystem.getClip();
