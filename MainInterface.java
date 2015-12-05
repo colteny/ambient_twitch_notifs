@@ -90,7 +90,7 @@ public class MainInterface {
 	  Color endColor = new Color(225,75,75);
 	  
 	  //input username as a param to build list of people you are following
-	  channels =getFollows("tehfl4n");
+	  //channels =getFollows("tehfl4n");
 
 		
 		/**
@@ -185,7 +185,7 @@ public class MainInterface {
 			final String channelName = channels.get(i);
 			JButton b1 = new JButton(channelName);
 			//testing to see if color change and sound works.
-			//alreadyOnline.add(0);
+			alreadyOnline.add(0);
 			b1.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -347,8 +347,7 @@ public static ArrayList<String> getFollows(String user) throws IOException, JSON
 	}
 
 	public static void playAudio() throws IOException {
-		URL path = MainInterface.class.getResource(currentDirectory + "\\src\\ambient_twitch_notifs\\sound1.wav");
-		File soundFile = new File(path.getFile());
+		File soundFile = new File(currentDirectory + "\\src\\ambient_twitch_notifs\\sound1.wav");
 		try {
 			AudioInputStream audioIn = AudioSystem.getAudioInputStream(soundFile);
 			Clip clip = AudioSystem.getClip();
