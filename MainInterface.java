@@ -32,7 +32,11 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 /*
- * Credit for checkOnline & readFromURL method code: https://stackoverflow.com/questions/21926374/checking-if-a-twitch-tv-stream-is-online-and-receive-viewer-counts-using-pircbot
+ * Ambient Twitch Interface
+ * Garry Hwang, Colten Yamamoto, Leon Liu
+ * ICS 414
+ * An ambient desktop notifcation application to let the user know when their favorite streamers come online
+ *Credit for checkOnline & readFromURL method code: https://stackoverflow.com/questions/21926374/checking-if-a-twitch-tv-stream-is-online-and-receive-viewer-counts-using-pircbot
  */
 
 public class MainInterface {
@@ -64,12 +68,14 @@ public class MainInterface {
 				}
 			}
 			else {
+				//reads in the refresh time if it exists
 				updateTime = Integer.parseInt(thisLine);
 				thisLine = br.readLine();
 
 			}
 			System.out.println(updateTime);
 			
+			//Reads in the username if there is one stored on the file
 			while (thisLine != null) {
 				channels = getFollows(thisLine);
 				System.out.println(thisLine);
@@ -81,10 +87,7 @@ public class MainInterface {
 
 		}catch(Exception e){
 			e.printStackTrace();
-		}
-
-		//Initialize channels
-		
+		}		
 		
 	  Color startColor = new Color(75,225,225);
 	  Color endColor = new Color(225,75,75);
@@ -182,7 +185,7 @@ public class MainInterface {
 				{
 					String url = "http://www.twitch.tv/" + channelName;
 					String os = System.getProperty("os.name").toLowerCase();
-
+					//Opens stream in default browser; linux is unsupported
 					if (os.indexOf( "win" ) >= 0) {
 						try {
 							rt.exec( "rundll32 url.dll,FileProtocolHandler " + url);
@@ -292,7 +295,7 @@ public class MainInterface {
 	}
 
 public static ArrayList<String> getFollows(String user) throws IOException, JSONException {
-	String userUrl = "https://api.twitch.tv/kraken/users/" + user + "/follows/channels";
+	String userUrl = "https://api.twitch.tv/kraken/users/" + user + "/follows/channels?limit=100}";
 	
 	ArrayList<String> streamers = new ArrayList<String>();
 
@@ -304,8 +307,9 @@ public static ArrayList<String> getFollows(String user) throws IOException, JSON
   //System.out.println(total);
   //System.out.println(json.toString());
   
-  if(total > 25) {
-  	total = 25;
+  //Maximum size for the array can't exceed 100
+  if(total > 100) {
+  	total = 100;
   }
   
 //parses JSONArray to get the name of the streamer then adds them to an array
