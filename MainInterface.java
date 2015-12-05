@@ -51,7 +51,7 @@ public class MainInterface {
 		String  thisLine = null;
 		try{
 			// initial settings
-			System.out.println(currentDirectory);
+			//System.out.println(currentDirectory);
 			BufferedReader br = new BufferedReader(new FileReader(new File(currentDirectory + "\\src\\ambient_twitch_notifs\\settings.txt")));
 			thisLine = br.readLine();
 			if(!isInteger(thisLine) || thisLine == null) {
@@ -69,9 +69,9 @@ public class MainInterface {
 
 			}
 			System.out.println(updateTime);
+			
 			while (thisLine != null) {
-				//need code to check if users exist
-				channels.add(thisLine);
+				channels = getFollows(thisLine);
 				System.out.println(thisLine);
 				thisLine = br.readLine();
 			}
@@ -90,14 +90,7 @@ public class MainInterface {
 	  Color endColor = new Color(225,75,75);
 	  
 	  //input username as a param to build list of people you are following
-	  channels =getFollows("tehfl4n");
-
-		
-		/**
-		 channels.add("Jankos");
-		 channels.add("C9Sneaky");
-		 channels.add("flosd");
-		 channels.add("Trick2g");**/
+	  //channels =getFollows("syndicate");
 
 		//create and initialize frames and menus
 		//Frame
@@ -105,9 +98,9 @@ public class MainInterface {
 		frame.setLayout(new GridLayout(0, 3));
 		JButton menu = new JButton("Settings");
 		menu.addActionListener(new ActionListener() {
-								   public void actionPerformed(ActionEvent e) {
-									   JFrame frame = new JFrame("Settings");
-									   JPanel list = new JPanel();
+			public void actionPerformed(ActionEvent e) {
+				JFrame frame = new JFrame("Settings");
+			    JPanel list = new JPanel();
 
 									   list.setLayout(new BoxLayout(list, BoxLayout.Y_AXIS));
 
@@ -132,14 +125,14 @@ public class MainInterface {
 									   list.add(changeTime);
 									   list.add(Box.createRigidArea(new Dimension(0, 7)));
 
-									   JLabel sn = new JLabel("Add new Streamer");
-									   final JTextField streamer = new JTextField(15);
-									   JButton addStream = new JButton("Add");
-									   addStream.addActionListener(new ActionListener() {
+									   JLabel sn = new JLabel("Username:");
+									   final JTextField user = new JTextField(15);
+									   JButton addUser = new JButton("Add");
+									   addUser.addActionListener(new ActionListener() {
 																	   public void actionPerformed(ActionEvent e) {
 																		   try {
-																			   if (getResponseCode("http://www.twitch.tv/" + streamer.getText()) != 404) {
-																				   channels.add(streamer.getText());
+																			   if (getResponseCode("http://www.twitch.tv/" + user.getText()) != 404) {
+																				   channels.set(0, user.getText());
 																			   }
 																		   }
 																		   catch (IOException ioe) {
@@ -151,8 +144,8 @@ public class MainInterface {
 									   );
 
 									   list.add(sn);
-									   list.add(streamer);
-									   list.add(addStream);
+									   list.add(user);
+									   list.add(addUser);
 
 
 									   JLabel ms = new JLabel("Messages");
@@ -185,7 +178,7 @@ public class MainInterface {
 			final String channelName = channels.get(i);
 			JButton b1 = new JButton(channelName);
 			//testing to see if color change and sound works.
-			//alreadyOnline.add(0);
+			alreadyOnline.add(0);
 			b1.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -213,11 +206,11 @@ public class MainInterface {
 			});
 			b1.setToolTipText(channels.get(i));
 			if(checkIfOnline(channels.get(i))) {
-				alreadyOnline.add(1);
+				//alreadyOnline.add(1);
 				b1.setBackground(startColor);
 			}
 			else {
-				alreadyOnline.add(0);
+				//alreadyOnline.add(0);
 				b1.setBackground(endColor);
 			}
 			b1.setPreferredSize(new Dimension(125, 50));
@@ -248,7 +241,7 @@ public class MainInterface {
 						//for loop changes slowly changes the color of button when the streamer becomes online
 						for(int q = 0; q < 150; q++) {
 							endColor = new Color (endColor.getRed()- 1, endColor.getGreen() +1, endColor.getBlue() +1);
-							buttons.get(i).setBackground(endColor);
+							buttons.get(i+1).setBackground(endColor);
 							try {
 								Thread.sleep(7);
 							} catch (InterruptedException e1) {
@@ -267,7 +260,7 @@ public class MainInterface {
 						//for loop changes slowly changes the color of button when the streamer becomes offline
 						for(int q = 0; q < 150; q++) {
 							startColor = new Color (startColor.getRed()+ 1, startColor.getGreen() -1, startColor.getBlue() -1);
-							buttons.get(i).setBackground(startColor);
+							buttons.get(i+1).setBackground(startColor);
 							try {
 								Thread.sleep(7);
 							} 	catch (InterruptedException e1) {
@@ -311,6 +304,12 @@ public static ArrayList<String> getFollows(String user) throws IOException, JSON
   JSONObject json = new JSONObject(jsonText);
   //total number of people following
   int total = (int) json.get("_total");
+  //System.out.println(total);
+  //System.out.println(json.toString());
+  
+  if(total > 25) {
+  	total = 25;
+  }
   
 //parses JSONArray to get the name of the streamer then adds them to an array
   for(int i = total-1; i >= 0;i--) {
@@ -347,7 +346,7 @@ public static ArrayList<String> getFollows(String user) throws IOException, JSON
 	}
 
 	public static void playAudio() throws IOException {
-		URL path = MainInterface.class.getResource(currentDirectory + "\\src\\ambient_twitch_notifs\\sound1.wav");
+		URL path = MainInterface.class.getResource("sound1.wav");
 		File soundFile = new File(path.getFile());
 		try {
 			AudioInputStream audioIn = AudioSystem.getAudioInputStream(soundFile);
