@@ -185,7 +185,7 @@ public class MainInterface {
 			final String channelName = channels.get(i);
 			JButton b1 = new JButton(channelName);
 			//testing to see if color change and sound works.
-			//alreadyOnline.add(0);
+			alreadyOnline.add(0);
 			b1.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -213,11 +213,11 @@ public class MainInterface {
 			});
 			b1.setToolTipText(channels.get(i));
 			if(checkIfOnline(channels.get(i))) {
-				alreadyOnline.add(1);
+				//alreadyOnline.add(1);
 				b1.setBackground(startColor);
 			}
 			else {
-				alreadyOnline.add(0);
+				//alreadyOnline.add(0);
 				b1.setBackground(endColor);
 			}
 			b1.setPreferredSize(new Dimension(125, 50));
@@ -348,7 +348,8 @@ public static ArrayList<String> getFollows(String user) throws IOException, JSON
 
 	public static void playAudio() throws IOException {
 		URL path = MainInterface.class.getResource(currentDirectory + "\\src\\ambient_twitch_notifs\\sound1.wav");
-		File soundFile = new File(path.getFile());
+		File soundFile = new File(currentDirectory + "\\src\\ambient_twitch_notifs\\sound1.wav");
+		System.out.println(soundFile);
 		try {
 			AudioInputStream audioIn = AudioSystem.getAudioInputStream(soundFile);
 			Clip clip = AudioSystem.getClip();
